@@ -1,4 +1,5 @@
 # Curious SDK
+Reinder: WIP Slop factory. Stay tuned.
 
 Read Curious (MindLogger) applet metadata and export answer data in Rust or `asyncio` Python. Decryption is local and returns a new value; it does not modify its input or make HTTP requests.
 
