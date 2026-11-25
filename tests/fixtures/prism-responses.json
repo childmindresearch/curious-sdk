@@ -1,0 +1,37 @@
+{
+  "/auth/login": {
+    "result": {
+      "token": {"accessToken": "fixture-token", "refreshToken": "fixture-refresh"},
+      "user": {"id": "00000000-0000-4000-8000-000000000002", "firstName": "Fixture", "lastName": "User"}
+    }
+  },
+  "/applets/{applet_id}": {
+    "result": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "displayName": "Prism SDK fixture",
+      "description": "Synthetic applet for integration testing",
+      "about": "Fixture only",
+      "version": "1",
+      "encryption": {"accountId": "fixture-account", "prime": "[1,1]", "base": "[5]", "publicKey": "[5]"}
+    }
+  },
+  "/answers/applet/{applet_id}/data": {
+    "result": {
+      "answers": [{
+        "id": "00000000-0000-4000-8000-000000000003",
+        "submitId": "00000000-0000-4000-8000-000000000004",
+        "version": "1",
+        "appletHistoryId": "fixture-history",
+        "createdAt": "2026-01-01T00:00:00Z",
+        "userPublicKey": "[5]",
+        "answer": "00000000000000000000000000000000:614c0af56f96d3a6ec6162818b890cef"
+      }],
+      "activities": [{
+        "id": "00000000-0000-4000-8000-000000000005",
+        "createdAt": "2026-01-01T00:00:00Z",
+        "idVersion": "fixture-activity-1",
+        "name": "Fixture activity"
+      }]
+    }
+  }
+}

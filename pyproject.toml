@@ -1,0 +1,14 @@
+[build-system]
+requires = ["maturin>=1.9,<2"]
+build-backend = "maturin"
+
+[project]
+name = "curious-sdk"
+version = "0.1.0"
+requires-python = ">=3.11"
+description = "Async Python bindings for the Curious read SDK"
+
+[tool.maturin]
+manifest-path = "bindings/python/Cargo.toml"
+python-source = "bindings/python/python"
+module-name = "curious_sdk._curious_sdk"

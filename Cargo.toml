@@ -1,0 +1,35 @@
+[package]
+name = "curious-sdk"
+version = "0.1.0"
+edition = "2024"
+include = ["/src/**/*.rs", "/tests/**/*.rs", "/README.md"]
+
+[dependencies]
+aes = "0.9"
+cbc = { version = "0.2", features = ["alloc"] }
+bytes = { version = "1", features = ["serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+futures-util = "0.3"
+hex = "0.4"
+num-bigint-dig = "0.9"
+rand = "0.10"
+reqwest = { version = "0.13", default-features = false, features = [
+    "multipart",
+    "query",
+    "rustls",
+    "stream",
+] }
+reqwest-middleware = { version = "0.5", features = ["multipart", "query"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["arbitrary_precision"] }
+serde_urlencoded = "0.7"
+sha2 = "0.11"
+thiserror = "2"
+tokio = { version = "1", features = ["time"] }
+url = { version = "2", features = ["serde"] }
+uuid = { version = "1", features = ["serde"] }
+reqwest-tracing = "0.7.1"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt"] }
+tracing = "0.1"

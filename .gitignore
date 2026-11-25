@@ -1,0 +1,7 @@
+local
+.env
+/target
+bindings/python/target/
+__pycache__/
+dist/
+court_*

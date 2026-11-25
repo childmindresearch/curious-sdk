@@ -1,0 +1,93 @@
+name: CI and release
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.event_name != 'push' || !github.event.deleted
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Check release version
+        if: github.ref_type == 'tag'
+        run: |
+          python - <<'PY'
+          import os
+          import pathlib
+          import re
+          import tomllib
+
+          tag = os.environ['GITHUB_REF_NAME']
+          if not re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+', tag):
+              raise SystemExit('Expected a release tag in the form vMAJOR.MINOR.PATCH')
+          for filename, section in (
+              ('Cargo.toml', 'package'),
+              ('bindings/python/Cargo.toml', 'package'),
+              ('pyproject.toml', 'project'),
+          ):
+              with pathlib.Path(filename).open('rb') as manifest:
+                  version = tomllib.load(manifest)[section]['version']
+              if tag != f'v{version}':
+                  raise SystemExit(f'{tag} does not match {filename} version {version}')
+          PY
+      - name: Test Rust
+        run: cargo test --locked
+      - name: Build Linux Python wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          target: x86_64
+          manylinux: '2_28'
+          rust-toolchain: stable
+          command: build
+          args: --release --locked --interpreter /opt/python/cp311-cp311/bin/python --out dist
+      - name: Test installed Python wheel
+        run: |
+          python -m pip install --no-deps dist/*.whl
+          python -m unittest discover -s bindings/python/tests
+      - name: Package Rust crate
+        if: github.ref_type == 'tag'
+        run: |
+          cargo package --locked
+          cp target/package/curious-sdk-*.crate dist/
+      - name: Collect release packages
+        if: github.ref_type == 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-packages
+          path: |
+            dist/*.whl
+            dist/*.crate
+          if-no-files-found: error
+
+  release:
+    if: github.ref_type == 'tag'
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-packages
+          path: packages
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SERVER: ${{ github.server_url }}
+          RELEASE_REPO: ${{ github.repository }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --repo "${RELEASE_SERVER#*://}/$RELEASE_REPO" \
+            --verify-tag --generate-notes \
+            packages/*.whl packages/*.crate

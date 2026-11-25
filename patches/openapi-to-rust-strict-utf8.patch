@@ -1,0 +1,43 @@
+diff --git a/src/generated/client.rs b/src/generated/client.rs
+--- a/src/generated/client.rs
++++ b/src/generated/client.rs
+@@ -443,5 +443,8 @@
+         let raw_body = body_bytes;
+         let body_text = String::from_utf8_lossy(&raw_body).into_owned();
+         if false || status_code == 200u16 {
+-            match serde_json::from_str(&body_text) {
++            match std::str::from_utf8(&raw_body)
++                .map_err(|e| e.to_string())
++                .and_then(|text| serde_json::from_str(text).map_err(|e| e.to_string()))
++            {
+                 Ok(body) => Ok(body),
+@@ -627,5 +630,8 @@
+         let raw_body = body_bytes;
+         let body_text = String::from_utf8_lossy(&raw_body).into_owned();
+         if false || status_code == 200u16 {
+-            match serde_json::from_str(&body_text) {
++            match std::str::from_utf8(&raw_body)
++                .map_err(|e| e.to_string())
++                .and_then(|text| serde_json::from_str(text).map_err(|e| e.to_string()))
++            {
+                 Ok(body) => Ok(body),
+@@ -765,5 +771,8 @@
+         let raw_body = body_bytes;
+         let body_text = String::from_utf8_lossy(&raw_body).into_owned();
+         if false || status_code == 200u16 {
+-            match serde_json::from_str(&body_text) {
++            match std::str::from_utf8(&raw_body)
++                .map_err(|e| e.to_string())
++                .and_then(|text| serde_json::from_str(text).map_err(|e| e.to_string()))
++            {
+                 Ok(body) => Ok(body),
+@@ -925,5 +934,8 @@
+         let raw_body = body_bytes;
+         let body_text = String::from_utf8_lossy(&raw_body).into_owned();
+         if false || status_code == 200u16 {
+-            match serde_json::from_str(&body_text) {
++            match std::str::from_utf8(&raw_body)
++                .map_err(|e| e.to_string())
++                .and_then(|text| serde_json::from_str(text).map_err(|e| e.to_string()))
++            {
+                 Ok(body) => Ok(body),

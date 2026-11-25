@@ -1,0 +1,16 @@
+[generator]
+spec_path = "https://api-v2.mindlogger.org/openapi.json"
+output_dir = "src/generated"
+module_name = "generated"
+
+[client]
+operations = [
+    "POST /auth/login",
+    "GET /applets",
+    "GET /applets/{applet_id}",
+    "GET /answers/applet/{applet_id}/data",
+]
+prune_models = true
+
+[features]
+enable_async_client = true
